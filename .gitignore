@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Environment secrets
+.env
+
+# Database (contains real user data — never commit)
+*.db
+*.db-journal
+backend/prisma/dit_claims.backup-*.db
+
+# Build output
+frontend/dist/
+
+# Empty leftover repo folder
+claim system/
+
+# Misc
+*.log
+.DS_Store

@@ -1,0 +1,100 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dit_claims.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  lecturer  Lecturer?
+}
+
+model Lecturer {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  name         String
+  department   String   @default("COMPUTER STUDIES")
+  address      String   @default("P.O.BOX 2958 DAR ES SALAAM")
+  bank         String   @default("CRDB")
+  branch       String   @default("VIJANA BRANCH")
+  accountNo    String   @default("")
+  accountName  String   @default("")
+  academicYear String   @default("2024/2025")
+  degreeRate   Int      @default(15000)
+  odRate       Int      @default(10000)
+  transportRate Int     @default(10000)
+  updatedAt    DateTime @updatedAt
+}
+
+model Module {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  code        String
+  name        String
+  programme   String
+  status      String    @default("active")
+  createdAt   DateTime  @default(now())
+  sessions    Session[]
+
+  @@unique([userId, code])
+}
+
+model Class {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  code        String
+  programme   String
+  year        String
+  semester    String    @default("1")
+  createdAt   DateTime  @default(now())
+  sessions    Session[]
+
+  @@unique([userId, code])
+}
+
+model TimetableEntry {
+  id           Int    @id @default(autoincrement())
+  userId       Int
+  dayOfWeek    String
+  moduleId     Int
+  classId      Int
+  programme    String
+  startTime    String
+  endTime      String
+  hasTransport Boolean @default(false)
+  remarks      String  @default("")
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  date        String
+  moduleId    Int
+  module      Module   @relation(fields: [moduleId], references: [id])
+  classId     Int
+  class       Class    @relation(fields: [classId], references: [id])
+  programme   String
+  startTime   String
+  endTime     String
+  hours       Float
+  hourlyRate  Int
+  tuition     Int
+  transport   Int      @default(0)
+  gross       Int
+  remarks     String   @default("")
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
