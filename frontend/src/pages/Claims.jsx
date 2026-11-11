@@ -111,7 +111,9 @@ export default function Claims() {
             {/* Header */}
             <div className="text-center border-b pb-4">
               <div className="font-bold text-gray-800 text-lg">DAR ES SALAAM INSTITUTE OF TECHNOLOGY</div>
-              <div className="text-gray-600">COMPUTER STUDIES DEPARTMENT</div>
+              {preview.lecturer.department && (
+                <div className="text-gray-600">{preview.lecturer.department} DEPARTMENT</div>
+              )}
               <div className="font-bold text-gray-800">CONSULTANCY CLAIM FORM</div>
             </div>
 
@@ -193,7 +195,9 @@ export default function Claims() {
             {/* Header */}
             <div className="text-center border-b pb-4">
               <div className="font-bold text-gray-800 text-lg">DAR ES SALAAM INSTITUTE OF TECHNOLOGY</div>
-              <div className="text-gray-600">COMPUTER STUDIES DEPARTMENT</div>
+              {summary.lecturer.department && (
+                <div className="text-gray-600">{summary.lecturer.department} DEPARTMENT</div>
+              )}
               <div className="font-bold text-gray-800">SUMMARY OF CONSULTANCY CLAIM FORM</div>
             </div>
 

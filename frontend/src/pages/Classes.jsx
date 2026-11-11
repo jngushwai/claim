@@ -76,7 +76,7 @@ export default function Classes() {
           <form onSubmit={save} className="space-y-4">
             <div>
               <label className="label">Class Code</label>
-              <input className="input" value={form.code} onChange={set('code')} placeholder="e.g. BENG24BEBE-2" required />
+              <input className="input" value={form.code} onChange={set('code')} required />
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>

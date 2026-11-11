@@ -5,7 +5,7 @@ const api = axios.create({ baseURL: '/api' });
 api.interceptors.response.use(
   r => r,
   err => {
-    if (err.response?.status === 401) {
+    if (err.response?.status === 401 && window.location.pathname !== '/login') {
       localStorage.removeItem('dit_token');
       localStorage.removeItem('dit_user');
       window.location.href = '/login';

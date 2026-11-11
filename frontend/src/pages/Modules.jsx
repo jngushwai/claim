@@ -77,11 +77,11 @@ export default function Modules() {
           <form onSubmit={save} className="space-y-4">
             <div>
               <label className="label">Module Code</label>
-              <input className="input" value={form.code} onChange={set('code')} placeholder="e.g. COU 07202" required />
+              <input className="input" value={form.code} onChange={set('code')} required />
             </div>
             <div>
               <label className="label">Module Name</label>
-              <input className="input" value={form.name} onChange={set('name')} placeholder="e.g. Microprocessor Technologies" required />
+              <input className="input" value={form.name} onChange={set('name')} required />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

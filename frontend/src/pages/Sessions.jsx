@@ -323,7 +323,7 @@ export default function Sessions() {
               </div>
               <div>
                 <label className="label">Hours per Session</label>
-                <input className="input" type="number" min="0.5" max="12" step="0.5" value={bulk.hours} onChange={setBulkField('hours')} placeholder="e.g. 3" />
+                <input className="input" type="number" min="0.5" max="12" step="0.5" value={bulk.hours} onChange={setBulkField('hours')} />
               </div>
             </div>
 
@@ -348,7 +348,7 @@ export default function Sessions() {
             </div>
             <div>
               <label className="label">Remarks (optional)</label>
-              <input className="input" value={bulk.remarks} onChange={setBulkField('remarks')} placeholder="e.g. CAT, Special class" />
+              <input className="input" value={bulk.remarks} onChange={setBulkField('remarks')} />
             </div>
             <div className="flex gap-3 pt-2">
               <button type="submit" className="btn-primary flex-1">
@@ -445,7 +445,7 @@ export default function Sessions() {
             </div>
             <div>
               <label className="label">Remarks (optional)</label>
-              <input className="input" value={form.remarks} onChange={set('remarks')} placeholder="e.g. CAT, Special class" />
+              <input className="input" value={form.remarks} onChange={set('remarks')} />
             </div>
             <div className="flex gap-3 pt-2">
               <button type="submit" className="btn-primary flex-1">Update Session</button>

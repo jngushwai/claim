@@ -69,7 +69,7 @@ router.get('/excel', auth, async (req, res) => {
     };
 
     ws.mergeCells('A1:H1'); ws.getCell('A1').value = 'DAR ES SALAAM INSTITUTE OF TECHNOLOGY';
-    ws.mergeCells('A2:H2'); ws.getCell('A2').value = 'COMPUTER STUDIES DEPARTMENT';
+    ws.mergeCells('A2:H2'); ws.getCell('A2').value = lecturer.department ? `${lecturer.department} DEPARTMENT` : '';
     ws.mergeCells('A3:H3'); ws.getCell('A3').value = 'CONSULTANCY CLAIM FORM';
     ['A1','A2','A3'].forEach(c => { ws.getCell(c).font = bold; ws.getCell(c).alignment = center; });
 
@@ -206,7 +206,7 @@ router.get('/summary-excel', auth, async (req, res) => {
     const borderAll = { top:{style:'thin'}, bottom:{style:'thin'}, left:{style:'thin'}, right:{style:'thin'} };
 
     ws.mergeCells('A1:F1'); ws.getCell('A1').value = 'DAR ES SALAAM INSTITUTE OF TECHNOLOGY';
-    ws.mergeCells('A2:F2'); ws.getCell('A2').value = 'COMPUTER STUDIES DEPARTMENT';
+    ws.mergeCells('A2:F2'); ws.getCell('A2').value = lecturer.department ? `${lecturer.department} DEPARTMENT` : '';
     ws.mergeCells('A3:F3'); ws.getCell('A3').value = 'SUMMARY OF CONSULTANCY CLAIM FORM';
     ['A1','A2','A3'].forEach(c => { ws.getCell(c).font = bold; ws.getCell(c).alignment = { horizontal: 'center' }; });
 

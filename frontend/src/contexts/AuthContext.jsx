@@ -13,6 +13,12 @@ export function AuthProvider({ children }) {
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.get('/auth/me')
+        .then(res => {
+          localStorage.setItem('dit_user', JSON.stringify(res.data));
+          setUser(res.data);
+        })
+        .catch(() => {});
     }
     setLoading(false);
   }, []);
@@ -31,22 +37,36 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const saveSession = (data) => {
+    localStorage.setItem('dit_token', data.token);
+    localStorage.setItem('dit_user', JSON.stringify(data.user));
+    api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+    setUser(data.user);
+    return data;
+  };
+
   const login = async (email, password) => {
     const res = await tryRequest(() => api.post('/auth/login', { email, password }));
-    localStorage.setItem('dit_token', res.data.token);
-    localStorage.setItem('dit_user', JSON.stringify(res.data.user));
-    api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-    setUser(res.data.user);
-    return res.data;
+    return saveSession(res.data);
   };
 
   const register = async (name, email, password) => {
     const res = await tryRequest(() => api.post('/auth/register', { name, email, password }));
-    localStorage.setItem('dit_token', res.data.token);
-    localStorage.setItem('dit_user', JSON.stringify(res.data.user));
-    api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-    setUser(res.data.user);
-    return res.data;
+    return saveSession(res.data);
+  };
+
+  const loginWithGoogle = async (credential) => {
+    const res = await tryRequest(() => api.post('/auth/google', { credential }));
+    return saveSession(res.data);
+  };
+
+  const updateUser = (partial) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const next = { ...prev, ...partial };
+      localStorage.setItem('dit_user', JSON.stringify(next));
+      return next;
+    });
   };
 
   const logout = () => {
@@ -57,7 +77,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, loginWithGoogle, updateUser, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -9,30 +9,33 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String?
+  googleId  String?   @unique
   name      String
-  createdAt DateTime @default(now())
+  role      String    @default("lecturer")
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
   lecturer  Lecturer?
 }
 
 model Lecturer {
-  id           Int      @id @default(autoincrement())
-  userId       Int      @unique
-  user         User     @relation(fields: [userId], references: [id])
-  name         String
-  department   String   @default("COMPUTER STUDIES")
-  address      String   @default("P.O.BOX 2958 DAR ES SALAAM")
-  bank         String   @default("CRDB")
-  branch       String   @default("VIJANA BRANCH")
-  accountNo    String   @default("")
-  accountName  String   @default("")
-  academicYear String   @default("2024/2025")
-  degreeRate   Int      @default(15000)
-  odRate       Int      @default(10000)
-  transportRate Int     @default(10000)
-  updatedAt    DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique
+  user          User     @relation(fields: [userId], references: [id])
+  name          String
+  department    String   @default("")
+  address       String   @default("")
+  bank          String   @default("")
+  branch        String   @default("")
+  accountNo     String   @default("")
+  accountName   String   @default("")
+  academicYear  String   @default("")
+  degreeRate    Int      @default(0)
+  odRate        Int      @default(0)
+  transportRate Int      @default(0)
+  updatedAt     DateTime @updatedAt
 }
 
 model Module {

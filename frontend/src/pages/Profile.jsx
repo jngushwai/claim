@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../utils/api';
 import { fmt } from '../utils/format';
 import { useToast } from '../components/ui/Toast';
+import { useAuth } from '../contexts/AuthContext';
 import PasswordInput from '../components/ui/PasswordInput';
 
 export default function Profile() {
@@ -9,10 +10,13 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [pw, setPw] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [changingPw, setChangingPw] = useState(false);
+  const { user, updateUser } = useAuth();
   const toast = useToast();
+  const hasPassword = user?.hasPassword !== false;
 
   useEffect(() => {
     api.get('/lecturer').then(r => setForm(r.data)).catch(console.error);
+    api.get('/auth/me').then(r => updateUser(r.data)).catch(() => {});
   }, []);
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
@@ -24,12 +28,13 @@ export default function Profile() {
     if (pw.newPassword !== pw.confirmPassword) return toast('New passwords do not match', 'error');
     setChangingPw(true);
     try {
-      await api.post('/auth/change-password', {
-        currentPassword: pw.currentPassword,
+      const res = await api.post('/auth/change-password', {
+        currentPassword: hasPassword ? pw.currentPassword : '',
         newPassword: pw.newPassword
       });
       setPw({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      toast('Password changed successfully');
+      updateUser({ hasPassword: true });
+      toast(res.data?.message || 'Password changed successfully');
     } catch (err) {
       toast(err.response?.data?.error || 'Error changing password', 'error');
     } finally { setChangingPw(false); }
@@ -71,7 +76,7 @@ export default function Profile() {
             </div>
             <div>
               <label className="label">Academic Year</label>
-              <input className="input" value={form.academicYear} onChange={set('academicYear')} placeholder="2024/2025" />
+              <input className="input" value={form.academicYear} onChange={set('academicYear')} />
             </div>
           </div>
         </div>
@@ -81,15 +86,15 @@ export default function Profile() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label">Bank</label>
-              <input className="input" value={form.bank} onChange={set('bank')} placeholder="CRDB" />
+              <input className="input" value={form.bank} onChange={set('bank')} />
             </div>
             <div>
               <label className="label">Branch</label>
-              <input className="input" value={form.branch} onChange={set('branch')} placeholder="VIJANA BRANCH" />
+              <input className="input" value={form.branch} onChange={set('branch')} />
             </div>
             <div>
               <label className="label">Account Number</label>
-              <input className="input" value={form.accountNo} onChange={set('accountNo')} placeholder="0152411777500" />
+              <input className="input" value={form.accountNo} onChange={set('accountNo')} />
             </div>
             <div>
               <label className="label">Account Name</label>
@@ -102,15 +107,15 @@ export default function Profile() {
           <h2 className="font-bold text-gray-700 border-b pb-2">Hourly Rates (TZS)</h2>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { k: 'degreeRate', label: 'Degree Program', placeholder: '15000' },
-              { k: 'odRate', label: 'OD Program', placeholder: '10000' },
-              { k: 'transportRate', label: 'Transport Rate', placeholder: '10000' },
-            ].map(({ k, label, placeholder }) => (
+              { k: 'degreeRate', label: 'Degree Program' },
+              { k: 'odRate', label: 'OD Program' },
+              { k: 'transportRate', label: 'Transport Rate' },
+            ].map(({ k, label }) => (
               <div key={k}>
                 <label className="label">{label}</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">TZS</span>
-                  <input className="input pl-12" type="number" value={form[k]} onChange={set(k)} placeholder={placeholder} />
+                  <input className="input pl-12" type="number" value={form[k]} onChange={set(k)} />
                 </div>
                 <p className="text-xs text-gray-400 mt-1">{fmt(form[k])}/=</p>
               </div>
@@ -124,12 +129,20 @@ export default function Profile() {
       </form>
 
       <form onSubmit={changePassword} className="card space-y-4">
-        <h2 className="font-bold text-gray-700 border-b pb-2">Change Password</h2>
-        <div>
-          <label className="label">Current Password</label>
-          <PasswordInput value={pw.currentPassword} onChange={setPwField('currentPassword')}
-            required autoComplete="current-password" />
-        </div>
+        <h2 className="font-bold text-gray-700 border-b pb-2">
+          {hasPassword ? 'Change Password' : 'Set Account Password'}
+        </h2>
+        {hasPassword ? (
+          <div>
+            <label className="label">Current Password</label>
+            <PasswordInput value={pw.currentPassword} onChange={setPwField('currentPassword')}
+              required autoComplete="current-password" />
+          </div>
+        ) : (
+          <p className="text-xs text-gray-500">
+            You signed in with Google. Optionally set a password to also sign in with your email.
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">New Password</label>
@@ -142,9 +155,9 @@ export default function Profile() {
               required autoComplete="new-password" />
           </div>
         </div>
-        <p className="text-xs text-gray-400">At least 6 characters. You will keep your current session after changing.</p>
+        <p className="text-xs text-gray-400">At least 6 characters. You will keep your current session after saving.</p>
         <button type="submit" disabled={changingPw} className="btn-primary w-full py-3">
-          {changingPw ? 'Changing…' : 'Change Password'}
+          {changingPw ? 'Saving…' : hasPassword ? 'Change Password' : 'Set Password'}
         </button>
       </form>
     </div>

@@ -287,7 +287,7 @@ export default function Timetable() {
               </div>
               <div>
                 <label className="label">Hours per Session</label>
-                <input className="input" type="number" min="0.5" max="12" step="0.5" value={form.hours} onChange={set('hours')} placeholder="e.g. 3" />
+                <input className="input" type="number" min="0.5" max="12" step="0.5" value={form.hours} onChange={set('hours')} />
               </div>
             </div>
 
@@ -311,7 +311,7 @@ export default function Timetable() {
             </div>
             <div>
               <label className="label">Remarks (optional)</label>
-              <input className="input" value={form.remarks} onChange={set('remarks')} placeholder="e.g. Lab session" />
+              <input className="input" value={form.remarks} onChange={set('remarks')} />
             </div>
             <div className="flex gap-3 pt-2">
               <button type="submit" className="btn-primary flex-1">

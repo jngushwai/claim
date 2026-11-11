@@ -16,6 +16,9 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
+  const navItems = user?.role === 'super_admin'
+    ? [{ to: '/admin', label: 'Super Admin', icon: '🛡️' }, ...nav]
+    : nav;
 
   return (
     <div className="flex h-screen overflow-hidden bg-bg">
@@ -26,7 +29,7 @@ export default function Layout({ children }) {
           <div className="text-blue-200 text-xs mt-0.5">Claims Management</div>
         </div>
         <nav className="flex-1 py-4 overflow-y-auto">
-          {nav.map(n => (
+          {navItems.map(n => (
             <NavLink
               key={n.to}
               to={n.to}
@@ -45,7 +48,14 @@ export default function Layout({ children }) {
           ))}
         </nav>
         <div className="px-6 py-4 border-t border-white/10">
-          <div className="text-blue-200 text-xs mb-1">Logged in as</div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-blue-200 text-xs">Logged in as</span>
+            {user?.role === 'super_admin' && (
+              <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-white/20 text-white">
+                Super Admin
+              </span>
+            )}
+          </div>
           <div className="text-white text-sm font-medium truncate">{user?.name}</div>
           <button onClick={handleLogout} className="mt-3 text-xs text-blue-300 hover:text-white transition-colors">
             Sign Out →

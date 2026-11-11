@@ -19,9 +19,9 @@ router.put('/', auth, async (req, res) => {
       data: {
         name, department, address, bank, branch, accountNo, accountName,
         academicYear,
-        degreeRate: parseInt(degreeRate),
-        odRate: parseInt(odRate),
-        transportRate: parseInt(transportRate)
+        degreeRate: parseInt(degreeRate, 10) || 0,
+        odRate: parseInt(odRate, 10) || 0,
+        transportRate: parseInt(transportRate, 10) || 0
       }
     });
     res.json(lecturer);
