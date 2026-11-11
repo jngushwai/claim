@@ -7,6 +7,12 @@
       "runtimeArgs": ["run", "dev"],
       "cwd": "frontend",
       "port": 5747
+    },
+    {
+      "name": "vivus-site",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8734", "--directory", "C:\\Users\\PAVILION\\Documents\\claude\\vivus-website"],
+      "port": 8734
     }
   ]
 }
